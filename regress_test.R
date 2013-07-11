@@ -5,17 +5,17 @@ mymat <- array(rep(0, mat.size * mat.size * mat.size * nsubjects),
                dim=c(mat.size, mat.size, mat.size, nsubjects))
 signal.1 <- runif(nsubjects)
 signal.2 <- runif(nsubjects) 
-outcome <-  signal.1 +  4 * signal.2 + rnorm(nsubjects, sd=1) # signal.2 dwarfs signal.1
+outcome <-  pmax(signal.1 +  4 * signal.2 + rnorm(nsubjects, sd=1),0) # signal.2 dwarfs signal.1
 plot(outcome)
 for ( i in 1:nsubjects){
-  mymat[, , , i] <- rnorm(mat.size * mat.size * mat.size, sd=0.5)
-  mymat[1:2, 1:2, 1:2, i] <- signal.1[i] + rnorm(8, sd=1)
-  mymat[(mat.size-1):(mat.size), 1:2, 
-        1:2, i] <- signal.2[i] + rnorm(8, sd=1)
+  mymat[, , , i] <- abs(rnorm(mat.size * mat.size * mat.size, sd=0.5))
+  mymat[3:4, 3:4, 3:4, i] <- pmax(signal.1[i] + rnorm(8, sd=1), 0)
+  mymat[(mat.size-3):(mat.size-2), 3:4, 
+        3:4, i] <- pmax(signal.2[i] + rnorm(8, sd=1), 0)
 }
 true.mat <- array(rep(0, mat.size * mat.size * mat.size), dim=c(mat.size, mat.size, mat.size))
-true.mat[1:2, 1:2, 1:2] <- 1
-true.mat[(mat.size-1):mat.size, 1:2, 1:2] <- 1
+true.mat[3:4, 3:4, 3:4] <- 1
+true.mat[(mat.size-3):(mat.size-2), 3:4, 3:4] <- 1
 antsImageWrite(as.antsImage(true.mat), 'true.nii.gz')
 pval.mat <- array(rep(NA, mat.size * mat.size * mat.size), dim=c(mat.size, mat.size, mat.size))
 for ( i in 1:mat.size ){
