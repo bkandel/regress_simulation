@@ -71,7 +71,7 @@ mymat.proj <- apply(mymat, 4, function(x) x %*% true.mat)
 cor.test(mymat.proj, signal.1 + signal.2)
 cor.test(mymat.proj, outcome)
 for ( i in c(0,2)){
-  myimg <- antsImageRead(paste('outView1vec00', i, '.nii.gz', sep=''), dim=3vi )
+  myimg <- antsImageRead(paste('outView1vec00', i, '.nii.gz', sep=''), dim=3 )
   plotANTsImage(myimg, slices="1x10x2")
 }
 
